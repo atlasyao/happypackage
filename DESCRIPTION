@@ -1,0 +1,13 @@
+Package: happypackage
+Title: Project 3 for STAT 302
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Wendong",
+           family = "Yao",
+           role = c("aut", "cre"),
+           email = "atlasyao@uw.edu")
+Description: STAT 302 project 3 - create my own package.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
