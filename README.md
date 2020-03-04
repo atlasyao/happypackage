@@ -5,5 +5,3 @@
   <!-- badges: start -->
   [![Codecov test coverage](https://codecov.io/gh/atlasyao/happypackage/branch/master/graph/badge.svg)](https://codecov.io/gh/atlasyao/happypackage?branch=master)
   <!-- badges: end -->
-  
-haha
