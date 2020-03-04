@@ -1,4 +1,4 @@
-library(testthat)
+devtoolibrary(testthat)
 library(happypackage)
 
 test_check("happypackage")
