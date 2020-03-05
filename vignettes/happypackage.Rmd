@@ -1,8 +1,9 @@
 ---
 title: "Project 3: happypackage"
+author: "Wendong Yao"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Project 3: happypackage}
+  %\VignetteIndexEntry{happypackage Tutorial}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
