@@ -1,3 +1,21 @@
+#' my k-Nearest Neighbors Cross-Validation function
+#'
+#' This function performs a k-Nearest Neighbors Cross-Validation in R.
+#'
+#' @param train input data frame
+#' @param cl true class value of your training data
+#' @param k_nn integer representing the number of neighbors
+#' @param k_cv integer representing the number of folds
+#'
+#' @return a list with objects:
+#' \code{class}, a vector of the predicted class yi_hat for all observations;
+#' \code{cv_err}, a numeric with the cross-validation misclassification error.
+#'
+#' @examples
+#' my_knn_cv <- my_knn_cv(iris, iris$Species, 1, 5)
+#' my_knn_cv <- my_knn_cv(iris, iris$Species, 5, 5)
+#'
+#' @export
 my_knn_cv <- function(train, cl, k_nn, k_cv) {
   # select only the numeric column
   measure <- train[,-5]
@@ -34,4 +52,12 @@ my_knn_cv <- function(train, cl, k_nn, k_cv) {
     # store the misclassification rate in the empty matrix
     error[i, 1] <- false_rate
   }
+  # build model with full data
+  knn_full <- knn(train = measure, cl = cl, test = measure, k = k_nn)
+  # calculate the average misclassification rate
+  cv_error <- colMeans(error)
+  # create a list to the model as well as the average misclassification rate
+  mylist <- list("class" = knn_full,
+                 "cv_error" = cv_error)
+  return(mylist)
 }
