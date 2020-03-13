@@ -15,49 +15,34 @@
 #' my_knn_cv <- my_knn_cv(iris, iris$Species, 1, 5)
 #' my_knn_cv <- my_knn_cv(iris, iris$Species, 5, 5)
 #'
+#' @import class
+#'
 #' @export
 my_knn_cv <- function(train, cl, k_nn, k_cv) {
-  # select only the numeric column
-  measure <- train[,-5]
-  set.seed(302)
   # get the total number of the data
   n <- nrow(data)
-  # Randomly split data into k parts
-  inds <- sample(rep(1:k_cv, length = n))
-  data_combine <- data.frame("x" = measure, "y" = cl, "split" = inds)
-  # create empty matrix for storing  misclassification rate
-  error <- matrix(NA, k_cv, 1)
-  for(i in 1:k_cv) {
+  # randomly split data into k parts
+  fold <- sample(rep(1:k_cv, length = n))
+  # create empty vector for storing error
+  error_for_i <- c()
+  for (i in 1 : k_cv) {
     # X_i
-    data_train <- data_combine %>% filter(split != i)
+    data_train <- train[fold != i, ]
     # X_i^*
-    data_test <- data_combine %>% filter(split == i)
-    # select only the numeric column
-    data_train_knn <- data_train %>%
-      select(x.Sepal.Length, x.Sepal.Width, x.Petal.Length, x.Petal.Width)
-    data_test_knn <- data_test %>%
-      select(x.Sepal.Length, x.Sepal.Width, x.Petal.Length, x.Petal.Width)
-    # extract 5th column of train data set and use it for knn later
-    cl_train_column <- data_train[ ,5]
-    # extract 5th column of test data set to measure accuracy
-    cl_test_column <- data_test[ ,5]
-    # Train our models
-    knn_predict <- knn(train = data_train_knn, cl = cl_train_column,
-                       test = data_test_knn, k = k_nn)
-    # create confusion matrix
-    tab <- table(knn_predict, cl_test_column)
-    accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
-    # calculate the misclassification rate
-    false_rate <- (100 - accuracy(tab)) / 100
-    # store the misclassification rate in the empty matrix
-    error[i, 1] <- false_rate
+    data_test <-  train[fold == i, ]
+    # Y_i
+    cl_train <- cl[fold != i]
+    # Y_i^*
+    cl_test <-  cl[fold == i]
+    knn_output <- knn(train = data_train, cl = cl_train, test  = data_test, k = k_nn)
+    # calculate the misclassification error
+    error_for_i[i] <- sum(knn_output != cl_test) / length(cl_test)
   }
-  # build model with full data
-  knn_full <- knn(train = measure, cl = cl, test = measure, k = k_nn)
+  # build model
+  my_class <- knn(train = train, cl = cl, test  = train, k = k_nn)
   # calculate the average misclassification rate
-  cv_error <- colMeans(error)
-  # create a list to the model as well as the average misclassification rate
-  mylist <- list("class" = knn_full,
-                 "cv_error" = cv_error)
-  return(mylist)
+  my_error <- mean(error_for_i)
+  # integrate the class and error to a list for output
+  my_list <- list("class" = my_class, "cv_err" = my_error)
+  return(my_list)
 }
