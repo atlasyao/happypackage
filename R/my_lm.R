@@ -1,3 +1,22 @@
+#' My lm function
+#'
+#' This function fits a linear model in R.
+#'
+#' @param formula a \code{formula} class object, a symbolic description of the
+#' model to be fitted.
+#' @param data input data frame.
+#'
+#' @return a summary table:
+#' \code{Estimate}, the beta value;
+#' \code{Std. Error}, the standard error;
+#' \code{t value} the t value;
+#' \code{Pr(>|t|)}, the p value.
+#'
+#' @examples
+#' data(mtcars)
+#' my_lm(mpg ~ hp + wt, data = mtcars)
+#'
+#' @export
 my_lm <- function(formula, data) {
   # model matrix x
   matrix_x <- model.matrix(formula, data)
