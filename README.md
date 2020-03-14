@@ -5,3 +5,23 @@
   <!-- badges: start -->
   [![Codecov test coverage](https://codecov.io/gh/atlasyao/happypackage/branch/master/graph/badge.svg)](https://codecov.io/gh/atlasyao/happypackage?branch=master)
   <!-- badges: end -->
+
+## Installation
+
+To download the happypackage, use the code below.
+
+``` r
+# install.packages("happypackage")
+devtools::install_github("atlasyao/happypackage")
+library(happypackage)
+```
+
+## Use this to view the vignette in the Demo HTML help
+``` r
+help(package = "happypackage", help_type = "html")
+```
+
+## Use this to view the vignette as an isolated HTML file
+``` r
+utils::browseVignettes(package = "happypackage")
+```
