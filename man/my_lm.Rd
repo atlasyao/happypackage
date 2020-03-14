@@ -26,7 +26,7 @@ This function fits a linear model in R.
 data(mtcars)
 my_lm(mpg ~ hp + wt, data = mtcars)
 data(my_gapminder)
-my_lm(my_fml = pop ~ gdpPercap, my_data = my_gapminder)
+my_lm(pop ~ gdpPercap, data = my_gapminder)
 
 }
 \keyword{prediction}

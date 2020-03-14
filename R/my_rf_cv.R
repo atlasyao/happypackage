@@ -25,9 +25,9 @@ my_rf_cv <- function(k) {
   MSE <- rep(NA, k)
   for(i in 1:k) {
     # X_i
-    data_train <- dataset[folds != i, ]
+    data_train <- dataset[fold != i, ]
     # X_i^*
-    data_test <- dataset[folds == i, ]
+    data_test <- dataset[fold == i, ]
     # train the randomForest model with 50 trees
     MODEL <- randomForest(lifeExp ~ gdpPercap, data = data_train, ntree = 50)
     # store predictions

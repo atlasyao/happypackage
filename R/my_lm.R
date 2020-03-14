@@ -18,7 +18,7 @@
 #' data(mtcars)
 #' my_lm(mpg ~ hp + wt, data = mtcars)
 #' data(my_gapminder)
-#' my_lm(my_fml = pop ~ gdpPercap, my_data = my_gapminder)
+#' my_lm(pop ~ gdpPercap, data = my_gapminder)
 #'
 #' @export
 my_lm <- function(formula, data) {

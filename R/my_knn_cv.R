@@ -14,8 +14,8 @@
 #' \code{cv_err}, a numeric with the cross-validation misclassification error.
 #'
 #' @examples
-#' my_knn_cv <- my_knn_cv(iris, iris$Species, 1, 5)
-#' my_knn_cv <- my_knn_cv(iris, iris$Species, 5, 5)
+#' my_knn_cv(iris, iris$Species, 1, 5)
+#' my_knn_cv(iris, iris$Species, 5, 5)
 #'
 #' @import class
 #'
