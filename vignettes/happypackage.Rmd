@@ -18,3 +18,42 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(happypackage)
 ```
+
+# Introduction
+
+This package is generated for the courese STAT 302 as project 3 in University of Washington. The package includes four functions: `my_t_test`, `my_lm`, `my_knn_cv`, and `my_rf_cv`.  
+`my_t_test` performs a one sample t-test in R.
+`my_lm` fits a linear model in R.
+`my_knn_cv`  performs a k-Nearest Neighbors Cross-Validation in R.
+`my_rf_cv` performs a Random Forest Cross-Validation in R.
+\n
+
+# Tutorial
+
+## 1. *my_t_test tutorial*
+### alternative: two.sided
+  \begin{align}
+  H_0: \mu &= 60,\\
+  H_a: \mu &\neq 60.
+  \end{align}
+```{r}
+data("my_gapminder")
+my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "two.sided")
+```
+The p-value here is 0.09322877, which is larger than 0.05. So we cannot conclude that a significant difference exists, and we fail to reject the null hypothesis.
+  
+### alternative: less
+```{r}
+my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "less")
+```
+The p-value here is 0.04661438, which is smaller than 0.05. So we can conclude that a significant difference exists, and we reject the null hypothesis.
+  
+### alternative: greater
+```{r}
+my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "greater")
+```
+The p-value here is 0.9533856, which is larger than 0.05. So we cannot conclude that a significant difference exists, and we fail to reject the null hypothesis.
+  
+
+## 2. *my_lm tutorial*
+
