@@ -7,6 +7,8 @@
 #' @param k_nn integer representing the number of neighbors
 #' @param k_cv integer representing the number of folds
 #'
+#' @keywords  prediction
+#'
 #' @return a list with objects:
 #' \code{class}, a vector of the predicted class yi_hat for all observations;
 #' \code{cv_err}, a numeric with the cross-validation misclassification error.
@@ -19,7 +21,7 @@
 #'
 #' @export
 my_knn_cv <- function(train, cl, k_nn, k_cv) {
-  # get the total number of the data
+  # get the total row number of the data
   n <- nrow(data)
   # randomly split data into k parts
   fold <- sample(rep(1:k_cv, length = n))

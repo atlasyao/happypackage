@@ -6,6 +6,8 @@
 #' model to be fitted.
 #' @param data input data frame.
 #'
+#' @keywords prediction
+#'
 #' @return a summary table:
 #' \code{Estimate}, the beta value;
 #' \code{Std. Error}, the standard error;

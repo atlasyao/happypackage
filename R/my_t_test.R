@@ -8,6 +8,8 @@
 #' @param mu a number indicating the true value of the mean
 #' (or difference in means if you are performing a two sample test).
 #'
+#' @keywords inference
+#'
 #' @return the t test results of x:
 #' a list includes,
 #' \code{test_stat}, the value of the test statistic;
