@@ -14,5 +14,5 @@
 #' }
 #'
 #' @source
-#' https://www.gapminder.org/data/
+#' \url{https://www.gapminder.org/data/}
 "my_gapminder"
