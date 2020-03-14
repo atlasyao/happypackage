@@ -16,7 +16,7 @@ devtools::install_github("atlasyao/happypackage")
 library(happypackage)
 ```
 
-## Use this to view the vignette in the Demo HTML help
+## Use this to view the vignette in the happypackage HTML help
 ``` r
 help(package = "happypackage", help_type = "html")
 ```
