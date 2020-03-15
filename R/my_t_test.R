@@ -24,9 +24,12 @@
 #' @export
 my_t_test <- function(x, alternative, mu) {
   # send an error message if the alternative is unrecognizable
-  if (!(alternative %in% c("two.sided", "less", "greater"))) {
-    stop("Alternative Error! Please choose from: two.sided, less, or greater.")
-  }
+  if(alternative != "two.sided" &
+     alternative != "less" &
+     alternative != "greater") {
+     stop("The second function input must be \"two.sided\" or \"less\" or
+          \"greater\"")}
+
 
   # store relevant details of x
   # store x mean
@@ -43,17 +46,17 @@ my_t_test <- function(x, alternative, mu) {
   # get the area under the curve for a t-distribution using function "pt()" after specifing the alternative hypothesis
   if (alternative == "greater") {
     # alternative is "greater", calculate the upper tail
-    prob <- pt(test_stat, df = x_dof, lower.tail = F)
+    prob <- pt(test_stat, x_dof, lower.tail = F)
   } else if (alternative == "less") {
     # alternative is "less", calculate the lower tail
-    prob <- pt(test_stat, df = x_dof, lower.tail = T)
+    prob <- pt(test_stat, x_dof, lower.tail = T)
   } else if (alternative == "two.sided") {
     if (test_stat < 0) {
       # test_stat < 0, calculate the lower tail then double it
-      prob <- pt(test_stat, df = x_dof, lower.tail = T) * 2
+      prob <- pt(test_stat, x_dof, lower.tail = T) * 2
     } else {
       # test_stat > 0, calculate the upper tail then double it
-      prob <- pt(test_stat, df = x_dof, lower.tail = F) * 2
+      prob <- pt(test_stat, x_dof, lower.tail = F) * 2
     }
   }
 
