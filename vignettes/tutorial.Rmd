@@ -123,7 +123,6 @@ for(i in 1:10) {
 # provide row and column name for the matrix 
 rownames(result) <- c("cv_err", "train_err")
 colnames(result) <- paste("knn_", seq(1:10), sep = "")
-a <- result[1,] - result[2,]
 # print the matrix
 result
 ```

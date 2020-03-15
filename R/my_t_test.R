@@ -41,7 +41,13 @@ my_t_test <- function(x, alternative, mu) {
   test_stat <- (x_mean - mu) / x_se
 
   # get the area under the curve for a t-distribution using function "pt()" after specifing the alternative hypothesis
-  if (alternative == "two.sided") {
+  if (alternative == "greater") {
+    # alternative is "greater", calculate the upper tail
+    prob <- pt(test_stat, df = x_dof, lower.tail = F)
+  } else if (alternative == "less") {
+    # alternative is "less", calculate the lower tail
+    prob <- pt(test_stat, df = x_dof, lower.tail = T)
+  } else if (alternative == "two.sided") {
     if (test_stat < 0) {
       # test_stat < 0, calculate the lower tail then double it
       prob <- pt(test_stat, df = x_dof, lower.tail = T) * 2
@@ -49,12 +55,6 @@ my_t_test <- function(x, alternative, mu) {
       # test_stat > 0, calculate the upper tail then double it
       prob <- pt(test_stat, df = x_dof, lower.tail = F) * 2
     }
-  } else if (alternative == "greater") {
-    # alternative is "greater", calculate the upper tail
-    prob <- pt(test_stat, df = x_dof, lower.tail = F)
-  } else {
-    # alternative is "less", calculate the lower tail
-    prob <- pt(test_stat, df = x_dof, lower.tail = T)
   }
 
   # store the results in a list
