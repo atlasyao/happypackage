@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(happypackage)
 library(ggplot2)
+library(class)
 library(tidyverse)
 ```
 
@@ -39,7 +40,6 @@ This package is generated for the courese STAT 302 as project 3 in University of
   H_a: \mu &\neq 60.
   \end{align}
 ```{r}
-data("my_gapminder")
 my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "two.sided")
 p_val <- my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "two.sided")$p_val
 ```
@@ -137,3 +137,57 @@ The process of cross-validation is that, it splits the data into k folds, and re
 It is useful because it makes the model more specific but not overfitted.
 
 ## 4. *my_rf_cv tutorial*
+```{r fig2, fig.height = 4, fig.width = 6}
+# create a matrix with 90 rows and 1 column 
+cv_err_matrix <- matrix(NA, 90, 1)
+# apply function my_rf_cv with k = 2, 5, 10 and store results into the matrix 
+for(i in 1:30) {
+  cvv_err_2 <- my_rf_cv(2)
+  cv_err_matrix[i, 1] <- cvv_err_2
+  cvv_err_5 <- my_rf_cv(5)
+  cv_err_matrix[30 + i, 1] <- cvv_err_5
+  cvv_err_10 <- my_rf_cv(10)
+  cv_err_matrix[60 + i, 1] <- cvv_err_10
+}
+# create another matrix for identify the numnber of k for each data so that we can apply it for graphing the box plot later 
+cv_err_type_matrix <- matrix(NA, 90, 1)
+for(i in 1:30) {
+  cv_err_type_matrix[i, 1] <- "k = 2"
+  cv_err_type_matrix[30 + i, ] <- "k = 5"
+  cv_err_type_matrix[60 + i, ] <- "k = 10"
+}
+# calculate the mean and standard deviation for all the CV estimate in each 30 simulations each for each k values
+k_2_mean <- mean(cv_err_matrix[1:30, ])
+k_2_sd <- sd(cv_err_matrix[1:30, ])
+k_5_mean <- mean(cv_err_matrix[31:60, ])
+k_5_sd <- sd(cv_err_matrix[31:60, ])
+k_10_mean <- mean(cv_err_matrix[61:90, ])
+k_10_sd <- sd(cv_err_matrix[61:90, ])
+k_table_matrix <- matrix(c(k_2_mean, k_2_sd, k_5_mean, k_5_sd, k_10_mean, 
+                           k_10_sd), ncol = 2, byrow = TRUE)
+# provide row and column name for the matrix
+rownames(k_table_matrix) <- c("k = 2", "k = 5", "k = 10")
+colnames(k_table_matrix) <- c("mean", "sd")
+# convert the matrix to a table and display the table
+k_table <- as.table(k_table_matrix)
+k_table
+# create data frame for graphing the boxplots
+cv_err_data_frame <- data.frame(cv_err = cv_err_matrix[, 1],
+                                k_value = cv_err_type_matrix[, 1])
+# graph boxplot for the CV errors for all k values used 
+boxplot <- ggplot(data = cv_err_data_frame, 
+       aes(x = reorder(k_value, cv_err, FUN = median), y = cv_err)) +
+  geom_boxplot(fill = "lightblue") +
+  theme_bw(base_size = 12) +
+  labs(title = "Cross validation error VS k value") +
+  theme(plot.title = element_text(hjust = 0.5,
+                                  face = "bold",
+                                  size = 12)) + 
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ylim(c(70, 85)) +
+  xlab("k fold value") +
+  ylab("Cross Validation Error")
+boxplot
+```
+
+From the box plot, we can observe that as the k fold value gets bigger, the variance in cross validation error gets smaller, the standard deviations get smaller, and the median is increasing.
