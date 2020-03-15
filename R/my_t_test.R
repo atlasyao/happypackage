@@ -22,7 +22,7 @@
 #' my_t_test(c(1:100), "greater", 10)
 #'
 #' @export
-my_t.test <- function(x, alternative, mu) {
+my_t_test <- function(x, alternative, mu) {
   # send error message when the second input is not equal to "two.sided" or
   # "less" or "greater"
   if(alternative != "two.sided" & alternative != "less" &
