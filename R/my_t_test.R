@@ -19,47 +19,47 @@
 #'
 #' @examples
 #' my_t_test(x = c(1:200), alternative = "less", mu = 25)
+#' my_t_test(c(1:100), greater, 10)
 #' my_t_test(c(1:100), "greater", 10)
 #'
 #' @export
 my_t_test <- function(x, alternative, mu) {
-  # send error message when the second input is not equal to "two.sided" or
-  # "less" or "greater"
-  if(alternative != "two.sided" & alternative != "less" &
-     alternative != "greater") {
-    stop("The second function input must be \"two.sided\" or \"less\" or
-         \"greater\"")
+  # send an error message if the alternative is unrecognizable
+  if (!(alternative %in% c("two.sided", "less", "greater"))) {
+    stop("Alternative Error! Please choose from: two.sided, less, or greater.")
   }
-
-  # calculate the mean of the the matrix
+  # store relevant details of x
+  # store x mean
   x_mean <- mean(x)
-  # calculate the standard deviation of the matrix
+  # store x standard deviation
   x_sd <- sd(x)
-  # calculat the sample size
-  x_length <- length(x)
-  # get the test statistic of one sample t-test
-  test_stat <- (x_mean - mu) / (x_sd / sqrt(x_length))
-  # get degree of freedom
-  x_dof <- x_length - 1
-
-  # calculate the p-value based on the input "alternative"
-  if(alternative == "greater") {
-    prob <- pt(test_stat, x_dof, lower.tail = FALSE)
-  } else if(alternative == "less") {
-    prob <- pt(test_stat, x_dof, lower.tail = TRUE)
-  } else if(alternative == "two.sided") {
-    # calculate p-value based on whether or not the test statistic is bigger
-    # than
-    if(test_stat < 0) {
-      prob <- 2 * pt(test_stat, x_dof, lower.tail = TRUE)
+  # store x standard error
+  x_se <- x_sd / sqrt(length(x))
+  # store the degree of freedom
+  x_dof <- length(x) - 1
+  # store the test statistics value
+  test_stat <- (x_mean - mu) / x_se
+  # get the area under the curve for a t-distribution using function "pt()" after specifing the alternative hypothesis
+  if (alternative == "two.sided") {
+    if (test_stat < 0) {
+      # test_stat < 0, calculate the lower tail then double it
+      prob <- pt(test_stat, df = x_dof, lower.tail = T) * 2
     } else {
-      prob <- 2 * pt(test_stat, x_dof, lower.tail = FALSE)
+      # test_stat > 0, calculate the upper tail then double it
+      prob <- pt(test_stat, df = x_dof, lower.tail = F) * 2
     }
+  } else if (alternative == "greater") {
+    # alternative is "greater", calculate the upper tail
+    prob <- pt(test_stat, df = x_dof, lower.tail = F)
+  } else {
+    # alternative is "less", calculate the lower tail
+    prob <- pt(test_stat, df = x_dof, lower.tail = T)
   }
-  # create a list for the 4 main components of a t-test
-  my_list <- list("test_stat" = test_stat,
+  # store the results in a list
+  results <- list("test_stat" = test_stat,
                   "df" = x_dof,
                   "alternative" = alternative,
-                  "p_value" = prob)
-  return(my_list)
+                  "p_val" = prob)
+  # return results
+  results
 }
