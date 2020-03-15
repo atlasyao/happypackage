@@ -28,7 +28,7 @@ This function performs a one sample t-test in R.
 }
 \examples{
 my_t_test(x = c(1:200), alternative = "less", mu = 25)
-my_t_test(c(1:100), greater, 10)
+my_t_test(c(1:100), "greater", 10)
 
 }
 \keyword{inference}

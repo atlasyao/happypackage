@@ -11,31 +11,27 @@
 #' @examples
 #' my_rf_cv(5)
 #'
-#' @import randomForest
+#' @import class magrittr randomForest
 #'
 #' @export
 my_rf_cv <- function(k) {
-  # load the data
-  dataset <- my_gapminder
-  # get the total row number of the data
-  n <- nrow(dataset)
-  # randomly split data into k parts
-  fold <- sample(rep(1:k, length = n))
-  # create empty vector for storing mean squared error
-  MSE <- rep(NA, k)
+  # get the total number of the dataset
+  my_gapminder <- my_gapminder
+  n <- nrow(my_gapminder)
+  inds <- sample(rep(1:k, length = n))
+  # randomly assigns observations to folds 1,…,k
+  my_gapminder[, "split"] <- inds
+  pred_mat2 <- matrix(NA, n, 1)
   for(i in 1:k) {
-    # X_i
-    data_train <- dataset[fold != i, ]
-    # X_i^*
-    data_test <- dataset[fold == i, ]
-    # train the randomForest model with 50 trees
+    data_train <- my_gapminder %>%
+      dplyr::filter(split != i)
+    data_test <- my_gapminder %>%
+      dplyr::filter(split == i)
+    # create the random forest model
     MODEL <- randomForest(lifeExp ~ gdpPercap, data = data_train, ntree = 50)
-    # store predictions
-    pred = predict(MODEL, data_test[, -1])
-    # store MSE
-    MSE[i] <- mean((data_test$lifeExp - pred)^2)
+    pred_mat2[inds == i, 1] = predict(MODEL, data_test[, -1])
   }
-  # calculate the mean MSE
-  avg_MSE <- mean(MSE)
-  return(avg_MSE)
+  # calculate the MSE across all k value
+  MSE <- colMeans((pred_mat2 - my_gapminder$lifeExp)^2)
+  return(MSE)
 }

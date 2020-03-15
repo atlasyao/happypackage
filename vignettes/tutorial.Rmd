@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(happypackage)
+library(ggplot2)
+library(tidyverse)
 ```
 
 # Introduction
@@ -39,21 +41,99 @@ This package is generated for the courese STAT 302 as project 3 in University of
 ```{r}
 data("my_gapminder")
 my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "two.sided")
+p_val <- my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "two.sided")$p_val
 ```
-The p-value here is 0.09322877, which is larger than 0.05. So we cannot conclude that a significant difference exists, and we fail to reject the null hypothesis.
+The p-value here is `r p_val`, which is larger than 0.05. So we cannot conclude that a significant difference exists, and we fail to reject the null hypothesis.
   
 ### alternative: less
+  \begin{align}
+  H_0: \mu &= 60,\\
+  H_a: \mu &< 60.
+  \end{align}
 ```{r}
 my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "less")
+p_val_2 <- my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "less")$p_val
 ```
-The p-value here is 0.04661438, which is smaller than 0.05. So we can conclude that a significant difference exists, and we reject the null hypothesis.
+The p-value here is `r p_val_2`, which is smaller than 0.05. So we can conclude that a significant difference exists, and we reject the null hypothesis.
   
 ### alternative: greater
+  \begin{align}
+  H_0: \mu &= 60,\\
+  H_a: \mu &> 60.
+  \end{align}
 ```{r}
 my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "greater")
+p_val_3 <- my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "greater")$p_val
 ```
-The p-value here is 0.9533856, which is larger than 0.05. So we cannot conclude that a significant difference exists, and we fail to reject the null hypothesis.
+The p-value here is `r p_val_3`, which is larger than 0.05. So we cannot conclude that a significant difference exists, and we fail to reject the null hypothesis.
   
 
 ## 2. *my_lm tutorial*
 
+```{r}
+# load gapminder data
+data("my_gapminder")
+# use my_lm to model
+lm_test <- my_lm(formula = lifeExp ~ gdpPercap + continent, data = my_gapminder)
+summary(lm_test)
+```
+
+According to the summary, the p value is less than 0.05, so we reject the null hypothesis. Therefore, the slope of the linear regression line is other than 0.
+
+```{r fig1, fig.height = 4, fig.width = 6}
+# extract the intercepts
+my_coef <- lm_test[, 1]
+my_matrix <- model.matrix(lifeExp ~ gdpPercap + continent, 
+                          data = my_gapminder)
+# calculate the fitted value 
+y_hat <- my_matrix %*% as.matrix(my_coef)
+# create data frame for the dot plot
+lm_data <- data.frame("Actual" = my_gapminder$lifeExp,
+                      "Fitted" = y_hat,
+                      "Continent" = my_gapminder$continent)
+# draw the dot plot
+lm_plot <- ggplot(lm_data, aes(x = Actual, y = Fitted, color = Continent)) +
+  geom_point() +
+  theme_bw(base_size = 12) +
+  labs(title = "Fitted life Expectancy VS Actual life Expectancy") + 
+  theme(plot.title = element_text(hjust = 0.5,
+                                  face = "bold",
+                                  size = 12)) +
+  geom_abline(slope = 1, intercept = 0, col = "red", lty = 2)
+lm_plot
+```
+
+According to the graph, we can see that the model fits all continents well, except Africa.  
+While Europe has the overall highest life expectancy, following by Americans and Asia.
+
+## 3. *my_knn_cv tutorial*
+
+```{r}
+# create an empty matrix to record the training misclassification rate and the CV misclassification rate
+result <- matrix(NA, nrow = 2, ncol = 10)
+# iterate from k_nn=1,…,10 and store the training misclassification rate and the CV misclassification rate
+for(i in 1:10) {
+  test_i <- my_knn_cv(my_gapminder, my_gapminder$continent, i, 5)
+  result[1, i] <- test_i$cv_error
+  accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
+  tab_i <- table(test_i$class, my_gapminder$continent)
+  training_set_error_k_nn <- round((100 - accuracy(tab_i)) / 100, digit = 2)
+  result[2, i] <- training_set_error_k_nn
+}
+# provide row and column name for the matrix 
+rownames(result) <- c("cv_err", "train_err")
+colnames(result) <- paste("knn_", seq(1:10), sep = "")
+a <- result[1,] - result[2,]
+# print the matrix
+result
+```
+
+I would choose knn = 1 model because it has the smallest training misclassification rates.  
+I would choose knn = 10 model because it ahs the smallest CV misclassification rates.
+I would choose knn = 10 in practice because its difference between cv error and training error is smallest.
+
+The process of cross-validation is that, it splits the data into k folds, and repeats choosing one fold as test data while others become training data. After each fold appeared as test data, it calculates the average of mean squared error.  
+
+It is useful because it makes the model more specific but not overfitted.
+
+## 4. *my_rf_cv tutorial*

@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' my_t_test(x = c(1:200), alternative = "less", mu = 25)
-#' my_t_test(c(1:100), greater, 10)
+#' my_t_test(c(1:100), "greater", 10)
 #'
 #' @export
 my_t_test <- function(x, alternative, mu) {

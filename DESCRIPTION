@@ -18,6 +18,11 @@ Suggests:
     knitr,
     rmarkdown
 Imports: 
-    class,
-    randomForest
+    stats, 
+    magrittr, 
+    class, 
+    randomForest, 
+    dplyr, 
+    ggplot2, 
+    tidyverse
 VignetteBuilder: knitr

@@ -24,8 +24,7 @@ a list with objects:
 This function performs a k-Nearest Neighbors Cross-Validation in R.
 }
 \examples{
-my_knn_cv(iris, iris$Species, 1, 5)
-my_knn_cv(iris, iris$Species, 5, 5)
+my_knn_cv(my_gapminder, my_gapminder$continent, 1, 5)
 
 }
 \keyword{prediction}
